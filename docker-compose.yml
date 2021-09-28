@@ -1,0 +1,38 @@
+version: '2'
+
+services:
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - "TZ=America/Sao_Paulo"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+    ports:
+      - "5432:5432"
+    network_mode: "host"
+  
+  kafka-consumer:
+    image: joaoferreira051090/kafka-consumer-app:latest
+    network_mode: "host"
+    depends_on:
+      - "postgres"
+    environment:
+      - "POSTGRES_HOST=localhost"
+      - "POSTGRES_DBNAME=postgres"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+
+  feature-store:
+    image: joaoferreira051090/feature-store-api:latest
+    network_mode: "host"
+    ports:
+      - "80:8000"
+    depends_on:
+      - "kafka-consumer"
+    environment:
+      - "POSTGRES_HOST=localhost"
+      - "POSTGRES_DBNAME=postgres"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
