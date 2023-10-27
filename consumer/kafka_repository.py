@@ -72,3 +72,4 @@ class KafkaTopicsRepository:
             ", ".join(["'" + str(value) + "'" for _, value in row.items()])
         )
         return insert_header + columns_to_insert + values_to_insert + ";"
+a
